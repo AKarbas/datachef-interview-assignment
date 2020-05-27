@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.views import View
 
 CAMPAIGN_TEMPLATE_NAME = 'campaigns/campaign.html'
+BANNER_NAME_TEMPLATE = 'image_{}.png'
 
 SQL_QUERY_TEMPLATE = '''select imp.banner_id,
        count(clk.click_id)  as clk_count,
@@ -37,9 +38,11 @@ class Campaign(View):
             cursor.execute(SQL_QUERY_TEMPLATE, [period, campaign_id])
             rows = cursor.fetchall()
         banner_id = Campaign.get_banner_id_from_db_result(rows)
+        banner_name = BANNER_NAME_TEMPLATE.format(banner_id)
         context = {
             'campaign_id': campaign_id,
             'banner_id': banner_id,
+            'banner_name': banner_name,
         }
         return render(request, CAMPAIGN_TEMPLATE_NAME, context)
 
@@ -57,7 +60,3 @@ class Campaign(View):
                 accepted_banners.append(row[0])
         logger.debug(f'{accepted_banners=}')
         return random_choice(accepted_banners)
-
-
-def banner(request, banner_id):
-    return HttpResponse(f'Banner ID: {banner_id}')
