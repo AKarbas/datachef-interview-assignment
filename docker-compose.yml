@@ -4,8 +4,6 @@ services:
   campaigns_webapp:
     build: webapp
     command: gunicorn --workers=8 --bind=0.0.0.0:8000 webapp.wsgi
-    ports:
-      - '8000:8000'
     links:
       - 'campaigns_postgress'
   campaigns_postgress:
@@ -14,4 +12,9 @@ services:
       POSTGRES_DB: campaigns_webapp
       POSTGRES_USER: django
       POSTGRES_PASSWORD: ognajd
-
+  campaigns_nginx:
+    build: nginx
+    ports:
+      - '80:80'
+    links:
+      - 'campaigns_webapp'

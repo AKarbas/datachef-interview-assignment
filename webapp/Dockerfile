@@ -10,5 +10,5 @@ COPY ./ ./
 
 CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
-expose 8000
+EXPOSE 8000
 
