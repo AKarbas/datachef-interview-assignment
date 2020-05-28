@@ -69,6 +69,7 @@ DATABASES = {
         'PASSWORD': 'ognajd',
         'HOST': 'campaigns_postgress',
         'PORT': '5432',
+        'CONN_MAX_AGE': None,
     }
 }
 
