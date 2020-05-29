@@ -4,6 +4,7 @@ from random import choice as random_choice
 
 from django.core.cache import cache
 from django.db import connection
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.utils import timezone
 from django.views import View
@@ -34,6 +35,8 @@ class Campaign(View):
     def get(self, request, campaign_id):
         period = Campaign.current_period()
         candidates = Campaign.candidate_banners(period, campaign_id)
+        if len(candidates) == 0:
+            return HttpResponseNotFound('Campaign not found.')
         last_banner = Campaign.get_last_banner(request)
         banner_id = Campaign.choose_banner(candidates, last_banner)
         Campaign.set_last_banner(request, banner_id)
