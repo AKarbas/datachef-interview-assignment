@@ -66,7 +66,8 @@ class Campaign(View):
     @staticmethod
     def candidate_banners(period, campaign_id):
         cache_key = f'{period}:{campaign_id}'
-        if (cached_res := cache.get(cache_key)) is not None:
+        if ((cached_res := cache.get(cache_key)) is not None
+                and len(cached_res) != 0):
             return cached_res
         with connection.cursor() as cursor:
             cursor.execute(Campaign.SQL_QUERY_TEMPLATE, [period, campaign_id])
