@@ -4,8 +4,8 @@ start:
 	docker-compose up -d --build
 
 importdata: start
-	cd webapp; ./manage.py importdata
+	docker-compose exec campaigns_webapp ./manage.py importdata
 
 test: start
-	cd webapp; ./manage.py test
+	docker-compose exec campaigns_webapp ./manage.py test
 

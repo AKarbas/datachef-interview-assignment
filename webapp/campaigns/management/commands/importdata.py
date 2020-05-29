@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from campaigns.models import Impression, Click, Conversion
 
-DEFAULT_BASE_PATH = '../given/csv/'  # Relative to manage.py
+DEFAULT_BASE_PATH = 'csvs/'  # Relative to manage.py
 DEFAULT_NUM_PERIODS = 4
 
 # 1: base path, 2: period, 3: file type

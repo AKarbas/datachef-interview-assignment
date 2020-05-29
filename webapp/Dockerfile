@@ -10,7 +10,6 @@ COPY ./requirements.pip ./
 RUN pip install --no-cache-dir -r requirements.pip
 
 COPY ./ ./
-COPY ./webapp/dockerized_settings.py ./webapp/settings.py
 
 ENTRYPOINT ["./entrypoint.sh"]
 
