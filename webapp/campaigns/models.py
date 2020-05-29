@@ -9,7 +9,7 @@ class Impression(models.Model):
     def __str__(self):
         return (f'Period: {self.period}, '
                 f'BannerId: {self.banner_id}, '
-                f'CampaignId: {self.banner_id}')
+                f'CampaignId: {self.campaign_id}')
 
 
 class Click(models.Model):
@@ -22,7 +22,7 @@ class Click(models.Model):
         return (f'Period: {self.period}, '
                 f'ClickId: {self.click_id}, '
                 f'BannerId: {self.banner_id}, '
-                f'CampaignId: {self.banner_id}')
+                f'CampaignId: {self.campaign_id}')
 
 
 class Conversion(models.Model):
