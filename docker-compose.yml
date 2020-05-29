@@ -4,8 +4,6 @@ services:
   campaigns_webapp:
     build: webapp
     command: gunicorn --workers=8 --bind=0.0.0.0:8000 webapp.wsgi
-    links:
-      - 'campaigns_postgress'
   campaigns_postgress:
     image: postgres:12.3
     environment:
@@ -16,5 +14,5 @@ services:
     build: nginx
     ports:
       - '80:80'
-    links:
-      - 'campaigns_webapp'
+  campaigns_cache:
+    image: memcached:1.6.6

@@ -85,3 +85,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '../nginx/static')
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'campaigns_cache:11211',
+    }
+}
