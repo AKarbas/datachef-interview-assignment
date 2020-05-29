@@ -56,12 +56,13 @@ The result of the query is cached, and a cache lookup is done before querying th
 
 ## Benchmark:
 
+### On my desktop:
+
 <details>
 <summary>5K requests</summary>
 
 ```Bash
-.../datachef-interview-task master*
-datachef-interview-task ❯ ab -n 5000 -c 32 http://localhost/campaigns/1/
+❯ ab -n 5000 -c 32 http://localhost/campaigns/1/
 This is ApacheBench, Version 2.3 <$Revision: 1843412 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -125,8 +126,7 @@ Percentage of the requests served within a certain time (ms)
 <summary>50K requests</summary>
 
 ```Bash
-.../datachef-interview-task master*
-datachef-interview-task ❯ ab -n 50000 -c 32 http://localhost/campaigns/1/
+❯ ab -n 50000 -c 32 http://localhost/campaigns/1/
 This is ApacheBench, Version 2.3 <$Revision: 1843412 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -185,12 +185,81 @@ Percentage of the requests served within a certain time (ms)
 
 </details>
 
+* An Apple iMac, with 16 GB 2400 MHz DDR4 memory, and a 3.5 GHz Quad-Core Intel Core i5 CPU. 
+
+### On my server:
+
+<details>
+<summary>5K requests</summary>
+
+```Bash
+$ ab -n 5000 -c 32 http://localhost/campaigns/1/
+This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 500 requests
+Completed 1000 requests
+Completed 1500 requests
+Completed 2000 requests
+Completed 2500 requests
+Completed 3000 requests
+Completed 3500 requests
+Completed 4000 requests
+Completed 4500 requests
+Completed 5000 requests
+Finished 5000 requests
+
+
+Server Software:        nginx/1.17.10
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /campaigns/1/
+Document Length:        189 bytes
+
+Concurrency Level:      32
+Time taken for tests:   51.952 seconds
+Complete requests:      5000
+Failed requests:        0
+Total transferred:      2675000 bytes
+HTML transferred:       945000 bytes
+Requests per second:    96.24 [#/sec] (mean)
+Time per request:       332.491 [ms] (mean)
+Time per request:       10.390 [ms] (mean, across all concurrent requests)
+Transfer rate:          50.28 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   1.3      0      22
+Processing:   239  331  83.2    319    1783
+Waiting:      238  331  83.1    318    1781
+Total:        239  331  83.9    319    1803
+
+Percentage of the requests served within a certain time (ms)
+  50%    319
+  66%    331
+  75%    340
+  80%    347
+  90%    369
+  95%    390
+  98%    514
+  99%    722
+ 100%   1803 (longest request)
+
+```
+
+</details>
+
+* A QEMU managed Linux VM, With 1 GB memory, and one 2GHz VCore CPU.
+
 #### Notes:
 
 * The benchmark was done using the ApacheBench tool and is done on only one campaign. This can make the results different from real-world data from requests hitting different campaigns. Although, this won't make the performance go lower than 5000 RPM, as there are at ~50 campaigns in the provided data, and it takes the cache about 2 seconds to warm up for every one of them. (Assuming ~25 rps when they all miss the cache.)
 
-* Tests were run on an Apple iMac (Retina 5K, 27-inch, 2017), with 16 GB 2400 MHz DDR4 memory, and a 3.5 GHz Quad-Core Intel Core i5 CPU. results may vary based on hardware and configurations/tunings.
-For example, if the program is run on a powerful server, the number of the gunicorn workers should be increased.
+* Results will vary based on hardware and configurations/tunings.
+For example, if the program is run on a powerful server, increasing the number of the gunicorn workers will help.
 
 
 ---
