@@ -15,30 +15,27 @@ class Campaign(View):
     TEMPLATE_NAME = 'campaigns/campaign.html'
     BANNER_NAME_TEMPLATE = 'image_{}.png'
     LAST_BANNER_KEY = 'last_banner'
-    SQL_QUERY_TEMPLATE = '''select imp.banner_id,
-       count(clk.click_id)  as clk_count,
-       SUM(cnv.revenue)     as revenue
-from campaigns_impression as imp
-         LEFT JOIN campaigns_click as clk
-                   on imp.period = clk.period
-                       and imp.banner_id = clk.banner_id
-                       and imp.campaign_id = clk.campaign_id
-         LEFT JOIN campaigns_conversion as cnv
-                   on clk.click_id = cnv.click_id_id
-where imp.period = %s
-  and imp.campaign_id = %s
-GROUP BY imp.banner_id
-ORDER BY revenue desc, clk_count desc
-LIMIT 10;
-'''
+    SQL_QUERY_TEMPLATE = ('select imp.banner_id, '
+                          '  count(clk.click_id) as clk_count, '
+                          '  SUM(cnv.revenue) as revenue '
+                          'from campaigns_impression as imp '
+                          '  LEFT JOIN campaigns_click as clk '
+                          '    on imp.period = clk.period '
+                          '      and imp.banner_id = clk.banner_id '
+                          '      and imp.campaign_id = clk.campaign_id '
+                          '  LEFT JOIN campaigns_conversion as cnv '
+                          '    on clk.click_id = cnv.click_id_id '
+                          'where imp.period = %s '
+                          '  and imp.campaign_id = %s '
+                          'GROUP BY imp.banner_id '
+                          'ORDER BY revenue desc, clk_count desc '
+                          'LIMIT 10;')
 
     def get(self, request, campaign_id):
         period = Campaign.current_period()
-        candidate_banners = Campaign.get_candidate_banners_from_db(period,
-                                                                   campaign_id)
+        candidates = Campaign.candidate_banners(period, campaign_id)
         last_banner = Campaign.get_last_banner(request)
-        banner_id = Campaign.get_banner_id_from_db_result(candidate_banners,
-                                                          last_banner)
+        banner_id = Campaign.choose_banner(candidates, last_banner)
         Campaign.set_last_banner(request, banner_id)
         banner_name = Campaign.BANNER_NAME_TEMPLATE.format(banner_id)
         context = {
@@ -64,7 +61,7 @@ LIMIT 10;
         request.session[Campaign.LAST_BANNER_KEY] = banner_id
 
     @staticmethod
-    def get_candidate_banners_from_db(period, campaign_id):
+    def candidate_banners(period, campaign_id):
         cache_key = f'{period}:{campaign_id}'
         if (cached_res := cache.get(cache_key)) is not None:
             return cached_res
@@ -75,9 +72,9 @@ LIMIT 10;
         return res
 
     @staticmethod
-    def get_banner_id_from_db_result(result_rows, last_banner=None):
+    def choose_banner(candidates, last_banner=None):
         accepted_banners = []
-        for row in result_rows:
+        for row in candidates:
             if row[2] or len(accepted_banners) < 5:
                 # Banner has revenue or less than 5 banners accepted
                 accepted_banners.append(row[0])

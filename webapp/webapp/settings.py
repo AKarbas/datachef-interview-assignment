@@ -30,9 +30,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'campaigns.apps.CampaignsConfig',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -47,12 +45,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # Is needed?
-            ],
-        },
     },
 ]
 
@@ -76,13 +68,6 @@ DATABASES = {
 TIME_ZONE = 'Asia/Tehran'
 
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = '/static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, '../nginx/static')
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
