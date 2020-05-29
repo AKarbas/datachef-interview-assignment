@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Impression, Click, Conversion
-from .views import Campaign
+from ..models import Impression, Click, Conversion
+from ..views import Campaign
 
 
 class CampaignViewTests(TestCase):
