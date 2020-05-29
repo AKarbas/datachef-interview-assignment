@@ -77,12 +77,17 @@ class Campaign(View):
 
     @staticmethod
     def choose_banner(candidates, last_banner=None):
-        accepted_banners = []
-        for row in candidates:
-            if row[2] or len(accepted_banners) < 5:
-                # Banner has revenue or less than 5 banners accepted
-                accepted_banners.append(row[0])
+        accepted_banners = Campaign.accepted_banners(candidates)
         if last_banner in accepted_banners and len(accepted_banners) > 1:
             accepted_banners.remove(last_banner)
         logger.debug(f'{accepted_banners=}')
         return random_choice(accepted_banners)
+
+    @staticmethod
+    def accepted_banners(candidates):
+        res = []
+        for candidate in candidates:
+            if candidate[2] or len(res) < 5:
+                # Banner has revenue or less than 5 banners accepted
+                res.append(candidate[0])
+        return res
