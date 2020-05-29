@@ -6,6 +6,5 @@ set -eEuo pipefail
 ./wait-for-it.sh campaigns_cache:11211
 
 ./manage.py migrate
-#./manage.py importdata
 
 $($@)
