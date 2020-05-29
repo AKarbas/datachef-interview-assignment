@@ -9,3 +9,5 @@ importdata: start
 test: start
 	docker-compose exec campaigns_webapp ./manage.py test
 
+stop:
+	docker-compose stop
