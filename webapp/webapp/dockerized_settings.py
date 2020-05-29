@@ -1,3 +1,6 @@
+from .settings import *
+
+# This should be used in the dockerized app.
 """
 Django settings for webapp project.
 
@@ -61,7 +64,7 @@ DATABASES = {
         'NAME': 'campaigns_webapp',
         'USER': 'django',
         'PASSWORD': 'ognajd',
-        'HOST': 'localhost',
+        'HOST': 'campaigns_postgres',
         'PORT': '5432',
         'CONN_MAX_AGE': None,
     }
@@ -76,6 +79,6 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'localhost:11211',
+        'LOCATION': 'campaigns_cache:11211',
     }
 }
