@@ -29,7 +29,7 @@ class Campaign(View):
                           'where imp.period = %s '
                           '  and imp.campaign_id = %s '
                           'GROUP BY imp.banner_id '
-                          'ORDER BY revenue desc, clk_count desc '
+                          'ORDER BY revenue desc nulls last, clk_count desc nulls last '
                           'LIMIT 10;')
 
     def get(self, request, campaign_id):
