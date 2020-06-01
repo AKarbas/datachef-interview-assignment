@@ -10,7 +10,7 @@ See [assignment document](https://www.notion.so/Data-Engineers-Mini-Assignment-7
 make start
 ```
 
-Make sure to put the hostname/ip address of the server in the `ALLOWED_HOSTS` settings key in the [settings file](webapp/webapp/settings.py).
+Make sure to put the hostname/IP address of the server in the `ALLOWED_HOSTS` settings key in the [settings file](webapp/webapp/settings.py).
 
 #### To test:
 
@@ -31,16 +31,20 @@ make stop
 
 ## Design:
 
-Given the obvious relational nature of the data, an RDBMS is used to store and query the data. During initial development, SQLite was used. Later, after making the code stable and functional, PostgreSQL was used to decrease the query latency and allow multiple backend processes run simultaneously, easily.
+Given the relational nature of the data, an RDBMS is used to store and query the data.
+During initial development, SQLite was used. Later, after making the code stable and functional,
+PostgreSQL was used to decrease query latency and allow multiple backend processes to run simultaneously, easily.
 
-Django was chosen as backend framework, as I had some exposure to it in the past and it made a lot of the work simpler. The django application is run by gunicorn workers and is reverse proxied by nginx, which also serves the static content (i.e. banner images).
+Django was chosen as backend framework, as I had some exposure to it in the past and it made a lot of the work simpler.
+The django application is run by gunicorn workers and is reverse proxied by nginx, which also serves the static content (i.e., banner images).
 
-The results of the db queries are cached to speed up the process. I chose Memcached for this purpose, as it can also be shared between multiple backend process.
-This increased request per second rate from ~70 to ~230 on my computer.
+The results of the database queries are cached to speed up the process. I chose Memcached for this purpose, as it can also be shared between multiple backend processes.
+This change increased the request per second rate from ~70 to ~230 on my computer.
 
 All of these are dockerized to allow easy and predictable setup and running of the backend server.
 
-The ingestion / loading of the data is done through django's ORM and is written as a django management command. See [importdata](webapp/campaigns/management/commands/importdata.py).
+The ingestion/loading of the data is done through django's ORM and is written as a django management command.
+See [importdata](webapp/campaigns/management/commands/importdata.py).
 
 
 
@@ -48,11 +52,11 @@ The ingestion / loading of the data is done through django's ORM and is written 
 
 - Current period is determined based on the current time. (Server-timezone dependent.)
 - The requested campaign ID is extracted from the URL.
-- ID of the last banner served to that client is extracted from request cookies.
+- The ID of the last banner served to that client is extracted from request cookies.
 - An SQL query is run against the database to determine candidate banners to show for that period and campaign.
 The result of the query is cached, and a cache lookup is done before querying the database.
-- One of the returned banners (from db) except for the banner served to that client last time is chosen at random.
-- A simple HTML page is rendered and served, containing an `img` showing the chosen banner.
+- One of the candidate banners except the last banner served to that client for that campaign is chosen at random.
+- A simple HTML page is rendered and served, showing the chosen banner.
 
 ## Benchmark:
 
@@ -256,10 +260,14 @@ Percentage of the requests served within a certain time (ms)
 
 #### Notes:
 
-* The benchmark was done using the ApacheBench tool and is done on only one campaign. This can make the results different from real-world data from requests hitting different campaigns. Although, this won't make the performance go lower than 5000 RPM, as there are at ~50 campaigns in the provided data, and it takes the cache about 2 seconds to warm up for every one of them. (Assuming ~25 rps when they all miss the cache.)
+* The benchmark was done using the ApacheBench tool and is done on only one campaign.
+This can make the results different from real-world data about requests hitting various campaigns.
+Yet, this won't make the performance go lower than 5000 RPM, as there are at ~50 campaigns in the provided data,
+and it takes the cache about 2 seconds to warm up for every one of them.
+(Assuming ~25 rps when they all miss the cache.)
 
-* Results will vary based on hardware and configurations/tunings.
-For example, if the program is run on a powerful server, increasing the number of the gunicorn workers will help.
+* Results will vary based on hardware and configurations and tunings.
+For example, if the program is run on a powerful server, increasing the number of gunicorn workers will help.
 
 
 ---
