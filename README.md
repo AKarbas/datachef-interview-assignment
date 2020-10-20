@@ -1,4 +1,6 @@
-# DataChef Interview Assignment Solution
+# Some Company's Interview Assignment
+
+I was asked to remove their name. :)
 
 See [assignment document](https://www.notion.so/Data-Engineers-Mini-Assignment-72092166008c4b4d94f48a4e7a9acd9c) for requirements.
 
